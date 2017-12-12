@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<jardesc>
+    <jar path="C:/Users/maghelli/Desktop/XWing-13sept2017/XWing.jar"/>
+    <options buildIfNeeded="true" compress="false" descriptionLocation="/XScope/executable.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="true" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
+    <selectedProjects/>
+    <manifest generateManifest="true" mainClassHandleIdentifier="=XScope/src&lt;xwing.main{XWingMain.java[XWingMain" manifestLocation="" manifestVersion="1.0" reuseManifest="false" saveManifest="false" usesManifest="true">
+        <sealing sealJar="false">
+            <packagesToSeal/>
+            <packagesToUnSeal/>
+        </sealing>
+    </manifest>
+    <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
+        <file path="/clearcl/.project"/>
+        <file path="/clearcl/gradle.properties"/>
+        <file path="/ClearControl/codeformat.eclipse.xml"/>
+        <file path="/clearaudio/gradlew.bat"/>
+        <file path="/clearcl/.classpath"/>
+        <file path="/APTJ/jnaerate.sh"/>
+        <file path="/ClearControl/README.md"/>
+        <file path="/APTJ/gradlew"/>
+        <javaElement handleIdentifier="=DcamJ/src"/>
+        <file path="/ASDKJ/README.md"/>
+        <javaElement handleIdentifier="=Simbryo/src"/>
+        <file path="/ClearControl/build.gradle"/>
+        <file path="/clearaudio/README.md"/>
+        <javaElement handleIdentifier="=JLargeArrays/src\/main\/java"/>
+        <javaElement handleIdentifier="=XScope/src"/>
+        <file path="/clearaudio/build.gradle"/>
+        <file path="/ClearControl/gradlew"/>
+        <file path="/clearcl/.travis.yml"/>
+        <file path="/clearaudio/gradle.properties"/>
+        <javaElement handleIdentifier="=NIRIOJ/java\/src"/>
+        <file path="/ClearControl/gradlew.bat"/>
+        <javaElement handleIdentifier="=FastFuse/src"/>
+        <file path="/APTJ/build.gradle"/>
+        <file path="/clearcl/README.md"/>
+        <file path="/clearaudio/build.bat"/>
+        <file path="/clearcl/build.gradle"/>
+        <javaElement handleIdentifier="=APTJ/src"/>
+        <file path="/clearaudio/gradlew"/>
+        <folder path="/cleargl/src"/>
+        <file path="/clearaudio/refresh.sh"/>
+        <file path="/ClearControl/.gitignore"/>
+        <file path="/ClearControl/IntelijCodeStyle.xml"/>
+        <file path="/ClearControl/.project"/>
+        <file path="/ASDKJ/.project"/>
+        <file path="/ASDKJ/asdk.config.win.jnaerator"/>
+        <file path="/ASDKJ/build.gradle"/>
+        <file path="/clearcl/gradlew"/>
+        <file path="/clearcl/refresh.sh"/>
+        <file path="/ClearControl/.classpath"/>
+        <file path="/clearaudio/.project"/>
+        <file path="/clearcl/gradlew.bat"/>
+        <file path="/ASDKJ/jnaerate.bat"/>
+        <file path="/ASDKJ/.gitattributes"/>
+        <file path="/ASDKJ/refresh.sh"/>
+        <file path="/clearaudio/.classpath"/>
+        <file path="/APTJ/.classpath"/>
+        <file path="/ClearControl/.travis.yml"/>
+        <file path="/APTJ/build.sh"/>
+        <javaElement handleIdentifier="=clearaudio/src\/java"/>
+        <file path="/APTJ/gradlew.bat"/>
+        <file path="/ClearControl/gradle.properties"/>
+        <javaElement handleIdentifier="=ASDKJ/src"/>
+        <javaElement handleIdentifier="=clearcl/src\/java"/>
+        <file path="/clearaudio/.travis.yml"/>
+        <file path="/clearaudio/.gitignore"/>
+        <file path="/ASDKJ/.classpath"/>
+        <javaElement handleIdentifier="=JTransforms/src\/main\/java"/>
+        <file path="/ASDKJ/build.sh"/>
+        <javaElement handleIdentifier="=DockFX/src\/main\/resources"/>
+        <javaElement handleIdentifier="=CoreMem/src"/>
+        <javaElement handleIdentifier="=clearvolume/src\/java"/>
+        <file path="/clearcl/.gitignore"/>
+        <file path="/APTJ/.project"/>
+        <javaElement handleIdentifier="=ECC100J/src"/>
+        <file path="/clearaudio/build.sh"/>
+        <folder path="/clearcl/src"/>
+        <javaElement handleIdentifier="=Halcyon/src\/main\/java"/>
+        <file path="/ASDKJ/.gitignore"/>
+        <javaElement handleIdentifier="=ClearControl/src"/>
+        <file path="/clearaudio/LICENSE"/>
+        <javaElement handleIdentifier="=DockFX/src\/main\/java"/>
+        <file path="/APTJ/aptj.config.win.jnaerator"/>
+        <folder path="/clearaudio/src"/>
+        <file path="/clearcl/codeformat.eclipse.xml"/>
+        <file path="/APTJ/.gitignore"/>
+        <file path="/clearcl/LICENSE"/>
+    </selectedElements>
+</jardesc>
