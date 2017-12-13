@@ -5,6 +5,7 @@ import clearcontrol.devices.cameras.StackCameraDeviceInterface;
 import clearcontrol.devices.cameras.devices.hamamatsu.HamStackCamera;
 import clearcontrol.devices.lasers.devices.cobolt.CoboltLaserDevice;
 import clearcontrol.devices.lasers.devices.omicron.OmicronLaserDevice;
+import clearcontrol.devices.optomech.filterwheels.devices.fli.FLIFilterWheelDevice;
 import clearcontrol.devices.signalamp.devices.srs.SIM900MainframeDevice;
 import clearcontrol.devices.signalamp.devices.srs.SIM983ScalingAmplifierDevice;
 import clearcontrol.devices.signalgen.devices.nirio.NIRIOSignalGenerator;
@@ -39,10 +40,11 @@ public class BScopeMicroscope extends SimulatedLightSheetMicroscope
                          int pMaxStackProcessingQueueLength,
                          int pThreadPoolSize)
   {
-    super("XWing",
+    super("BSCope",
           pStackFusionContext,
           pMaxStackProcessingQueueLength,
           pThreadPoolSize);
+
   }
 
   /**
@@ -61,15 +63,29 @@ public class BScopeMicroscope extends SimulatedLightSheetMicroscope
 
     // Setting up lasers:
     {
-    	
+
+      final OmicronLaserDevice lLaserDevice405 =
+          new OmicronLaserDevice(1);
+      addDevice(0, lLaserDevice405);
+
       final OmicronLaserDevice lLaserDevice488 =
-                                               new OmicronLaserDevice(2);
+          new OmicronLaserDevice(2);
       addDevice(0, lLaserDevice488);
 
-      /*final CoboltLaserDevice lLaserDevice594 =
-                                              new CoboltLaserDevice("Mambo",
-                                                                    100,
-                                                                    1);
+      final OmicronLaserDevice lLaserDevice515 =
+          new OmicronLaserDevice(3);
+      addDevice(0, lLaserDevice515);
+
+      final CoboltLaserDevice lLaserDevice561 =
+          new CoboltLaserDevice("Jive",
+                                100,
+                                4);
+      addDevice(1, lLaserDevice561);/**/
+
+      final CoboltLaserDevice lLaserDevice594 =
+          new CoboltLaserDevice("Mambo",
+                                100,
+                                5);
       addDevice(1, lLaserDevice594);/**/
 
     }
@@ -158,6 +174,13 @@ public class BScopeMicroscope extends SimulatedLightSheetMicroscope
                                                                                    pNumberOfLightSheets);
 
       addDevice(0, lLightSheetOpticalSwitch);
+    }
+
+    // setup filter wheel
+    {
+      FLIFilterWheelDevice lFLIFilterWheelDevice = new FLIFilterWheelDevice(1);
+      addDevice(0, lFLIFilterWheelDevice);
+
     }
 
   }
