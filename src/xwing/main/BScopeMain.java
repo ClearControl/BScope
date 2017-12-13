@@ -30,6 +30,7 @@ import xwing.gui.BScopeGui;
  * Xwing main class
  *
  * @author royer
+ * @author haesleinhuepf
  */
 public class BScopeMain extends Application implements LoggingFeature
 {
@@ -52,20 +53,12 @@ public class BScopeMain extends Application implements LoggingFeature
     boolean l3DDisplay = true;
 
     BorderPane lPane = new BorderPane();
-    ImageView lImageView =
-                         new ImageView(new Image(BScopeMicroscope.class.getResourceAsStream("icon/xwing.png")));
-
-    lImageView.fitWidthProperty().bind(pPrimaryStage.widthProperty());
-    lImageView.fitHeightProperty().bind(pPrimaryStage.heightProperty());
-
-    lPane.setCenter(lImageView);
 
     Scene scene = new Scene(lPane, 300, 300, Color.WHITE);
     pPrimaryStage.setScene(scene);
     pPrimaryStage.setX(0);
     pPrimaryStage.setY(0);
-    pPrimaryStage.setTitle("XWing");
-    pPrimaryStage.show();
+    pPrimaryStage.setTitle("BScope");
 
     ButtonType lButtonReal = new ButtonType("Real");
     ButtonType lButtonSimulation = new ButtonType("Simulation");
@@ -80,6 +73,9 @@ public class BScopeMain extends Application implements LoggingFeature
     sAlert.getButtonTypes().setAll(lButtonReal,
                                    lButtonSimulation,
                                    lButtonCancel);
+
+
+    pPrimaryStage.show();
 
     Platform.runLater(() -> {
       sResult = sAlert.showAndWait();
@@ -140,6 +136,7 @@ public class BScopeMain extends Application implements LoggingFeature
   {
     int lMaxStackProcessingQueueLength = 32;
     int lThreadPoolSize = 1;
+    int lNumberOfControlPlanes = 7;
 
     try (
         ClearCL lClearCL =
@@ -157,7 +154,7 @@ public class BScopeMain extends Application implements LoggingFeature
       info("Using device %s for stack fusion \n",
            lStackFusionContext.getDevice());
 
-      BScopeMicroscope lXWingMicroscope =
+      BScopeMicroscope lBScopeMicroscope =
                                        new BScopeMicroscope(lStackFusionContext,
                                                            lMaxStackProcessingQueueLength,
                                                            lThreadPoolSize);
@@ -183,49 +180,47 @@ public class BScopeMain extends Application implements LoggingFeature
                                                                                                  320,
                                                                                                  false);
 
-        lXWingMicroscope.addSimulatedDevices(false,
+        lBScopeMicroscope.addSimulatedDevices(false,
                                              false,
                                              true,
                                              lSimulatorDevice);
       }
       else
       {
-        lXWingMicroscope.addRealHardwareDevices(pNumberOfDetectionArms,
+        lBScopeMicroscope.addRealHardwareDevices(pNumberOfDetectionArms,
                                                 pNumberOfLightSheets);
       }
-      lXWingMicroscope.addStandardDevices();
-
-      BScopeGui lXWingGui;
+      lBScopeMicroscope.addStandardDevices(lNumberOfControlPlanes);
 
       info("Opening microscope devices...");
-      if (lXWingMicroscope.open())
+      if (lBScopeMicroscope.open())
       {
         info("Starting microscope devices...");
-        if (lXWingMicroscope.start())
+        if (lBScopeMicroscope.start())
         {
 
-          info("Setting up XWing GUI...");
-          lXWingGui = new BScopeGui(lXWingMicroscope,
+          info("Setting up BScope GUI...");
+          BScopeGui lBScopeGui = new BScopeGui(lBScopeMicroscope,
                                    pPrimaryStage,
                                    p2DDisplay,
                                    p3DDisplay);
-          lXWingGui.setup();
-          info("Opening XWing GUI...");
-          lXWingGui.open();
+          lBScopeGui.setup();
+          info("Opening BScope GUI...");
+          lBScopeGui.open();
 
-          lXWingGui.waitForVisible(true, 1L, TimeUnit.MINUTES);
+          lBScopeGui.waitForVisible(true, 1L, TimeUnit.MINUTES);
 
-          lXWingGui.connectGUI();
-          lXWingGui.waitForVisible(false, null, null);
+          lBScopeGui.connectGUI();
+          lBScopeGui.waitForVisible(false, null, null);
 
-          lXWingGui.disconnectGUI();
-          info("Closing XWing GUI...");
-          lXWingGui.close();
+          lBScopeGui.disconnectGUI();
+          info("Closing BScope GUI...");
+          lBScopeGui.close();
 
           info("Stopping microscope devices...");
-          lXWingMicroscope.stop();
+          lBScopeMicroscope.stop();
           info("Closing microscope devices...");
-          lXWingMicroscope.close();
+          lBScopeMicroscope.close();
         }
         else
           severe("Not all microscope devices started!");

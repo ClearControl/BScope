@@ -19,15 +19,16 @@ import clearcontrol.microscope.lightsheet.signalgen.LightSheetSignalGeneratorDev
 import clearcontrol.microscope.lightsheet.simulation.SimulatedLightSheetMicroscope;
 
 /**
- * XWing microscope
+ * BScope microscope
  *
  * @author royer
+ * @author haesleinhuepf
  */
 public class BScopeMicroscope extends SimulatedLightSheetMicroscope
 {
 
   /**
-   * Instantiates an XWing microscope
+   * Instantiates an BScope microscope
    * 
    * @param pStackFusionContext
    *          ClearCL context for stack fusion
@@ -180,9 +181,6 @@ public class BScopeMicroscope extends SimulatedLightSheetMicroscope
     {
       FLIFilterWheelDevice lFLIFilterWheelDevice = new FLIFilterWheelDevice(1);
       addDevice(0, lFLIFilterWheelDevice);
-
     }
-
   }
-
 }

@@ -5,7 +5,7 @@ import clearcontrol.microscope.lightsheet.gui.LightSheetMicroscopeGUI;
 import javafx.stage.Stage;
 
 /**
- * XWing microscope GUI
+ * BScope microscope GUI
  *
  * @author royer
  */
@@ -13,7 +13,7 @@ public class BScopeGui extends LightSheetMicroscopeGUI
 {
 
   /**
-   * Instantiates XWing microscope GUI
+   * Instantiates BScope microscope GUI
    * 
    * @param pLightSheetMicroscope
    *          microscope
