@@ -1,6 +1,7 @@
 package xwing;
 
 import clearcl.ClearCLContext;
+import clearcontrol.deformablemirrors.DeformableMirrorDevice;
 import clearcontrol.devices.cameras.StackCameraDeviceInterface;
 import clearcontrol.devices.cameras.devices.hamamatsu.HamStackCamera;
 import clearcontrol.devices.lasers.devices.cobolt.CoboltLaserDevice;
@@ -181,6 +182,14 @@ public class BScopeMicroscope extends SimulatedLightSheetMicroscope
     {
       FLIFilterWheelDevice lFLIFilterWheelDevice = new FLIFilterWheelDevice(1);
       addDevice(0, lFLIFilterWheelDevice);
+    }
+
+    // setup deformable mirror
+    {
+      //AlpaoDMDevice lAlpaoDMDevice = new AlpaoDMDevice(1);
+      //addDevice(0, lAlpaoDMDevice);
+      DeformableMirrorDevice lDeformableMirrorDevice = new DeformableMirrorDevice(1);
+      addDevice(0, lDeformableMirrorDevice);
     }
   }
 }
