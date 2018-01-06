@@ -1,12 +1,13 @@
 package xwing;
 
 import clearcl.ClearCLContext;
-import clearcontrol.deformablemirrors.DeformableMirrorDevice;
+import clearcontrol.anything.AnythingDevice;
 import clearcontrol.devices.cameras.StackCameraDeviceInterface;
 import clearcontrol.devices.cameras.devices.hamamatsu.HamStackCamera;
 import clearcontrol.devices.lasers.devices.cobolt.CoboltLaserDevice;
 import clearcontrol.devices.lasers.devices.omicron.OmicronLaserDevice;
 import clearcontrol.devices.optomech.filterwheels.devices.fli.FLIFilterWheelDevice;
+import clearcontrol.devices.optomech.filterwheels.devices.sim.FilterWheelDeviceSimulator;
 import clearcontrol.devices.signalamp.devices.srs.SIM900MainframeDevice;
 import clearcontrol.devices.signalamp.devices.srs.SIM983ScalingAmplifierDevice;
 import clearcontrol.devices.signalgen.devices.nirio.NIRIOSignalGenerator;
@@ -17,7 +18,13 @@ import clearcontrol.microscope.lightsheet.component.detection.DetectionArm;
 import clearcontrol.microscope.lightsheet.component.lightsheet.LightSheet;
 import clearcontrol.microscope.lightsheet.component.opticalswitch.LightSheetOpticalSwitch;
 import clearcontrol.microscope.lightsheet.signalgen.LightSheetSignalGeneratorDevice;
+import clearcontrol.microscope.lightsheet.simulation.LightSheetMicroscopeSimulationDevice;
 import clearcontrol.microscope.lightsheet.simulation.SimulatedLightSheetMicroscope;
+import clearcontrol.microscope.lightsheet.spatialphasemodulation.gui.jfx.DeformableMirrorPanel;
+import clearcontrol.microscope.lightsheet.spatialphasemodulation.slms.SpatialPhaseModulatorDeviceBase;
+import clearcontrol.microscope.lightsheet.spatialphasemodulation.slms.demo.DeformableMirrorDeviceDemoHelper;
+import clearcontrol.microscope.lightsheet.spatialphasemodulation.slms.devices.alpao.AlpaoDMDevice;
+import clearcontrol.microscope.lightsheet.spatialphasemodulation.slms.devices.sim.SpatialPhaseModulatorDeviceSimulator;
 
 /**
  * BScope microscope
@@ -178,6 +185,7 @@ public class BScopeMicroscope extends SimulatedLightSheetMicroscope
       addDevice(0, lLightSheetOpticalSwitch);
     }
 
+
     // setup filter wheel
     {
       FLIFilterWheelDevice lFLIFilterWheelDevice = new FLIFilterWheelDevice(1);
@@ -188,8 +196,47 @@ public class BScopeMicroscope extends SimulatedLightSheetMicroscope
     {
       //AlpaoDMDevice lAlpaoDMDevice = new AlpaoDMDevice(1);
       //addDevice(0, lAlpaoDMDevice);
-      DeformableMirrorDevice lDeformableMirrorDevice = new DeformableMirrorDevice(1);
-      addDevice(0, lDeformableMirrorDevice);
+      SpatialPhaseModulatorDeviceBase
+          lSpatialPhaseModulatorDeviceBase = new AlpaoDMDevice(1);
+      addDevice(0, lSpatialPhaseModulatorDeviceBase);
+    }
+
+    {
+      AnythingDevice lAnyDevice = new AnythingDevice();
+      addDevice(0, lAnyDevice);
+    }
+
+    System.out.println("DEVICES ADDED");
+  }
+
+  @Override
+  public void addSimulatedDevices(boolean pDummySimulation,
+                                                    boolean pXYZRStage,
+                                                    boolean pSharedLightSheetControl,
+                                                    LightSheetMicroscopeSimulationDevice pSimulatorDevice){
+    super.addSimulatedDevices(pDummySimulation, pXYZRStage, pSharedLightSheetControl, pSimulatorDevice);
+
+
+    // setup filter wheel
+    {
+      FilterWheelDeviceSimulator
+          lFilterWheelDevice = new FilterWheelDeviceSimulator("Simulated Filter wheel", 4);
+      addDevice(0, lFilterWheelDevice);
+    }
+
+
+    // setup deformable mirror
+    {
+      //AlpaoDMDevice lAlpaoDMDevice = new AlpaoDMDevice(1);
+      //addDevice(0, lAlpaoDMDevice);
+      SpatialPhaseModulatorDeviceBase lSpatialPhaseModulatorDeviceBase = new SpatialPhaseModulatorDeviceSimulator("Simulated Spatial Phase Modulator Device", 11, 1);
+      addDevice(0, lSpatialPhaseModulatorDeviceBase);
+    }
+
+    {
+      AnythingDevice lAnyDevice = new AnythingDevice();
+      addDevice(0, lAnyDevice);
     }
   }
+
 }
