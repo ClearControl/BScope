@@ -20,6 +20,7 @@ import clearcontrol.microscope.lightsheet.component.opticalswitch.LightSheetOpti
 import clearcontrol.microscope.lightsheet.signalgen.LightSheetSignalGeneratorDevice;
 import clearcontrol.microscope.lightsheet.simulation.LightSheetMicroscopeSimulationDevice;
 import clearcontrol.microscope.lightsheet.simulation.SimulatedLightSheetMicroscope;
+import clearcontrol.microscope.lightsheet.spatialphasemodulation.experimentscheduler.SpatialPhaseModulatorExperimentScheduler;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.gui.jfx.DeformableMirrorPanel;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.slms.SpatialPhaseModulatorDeviceBase;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.slms.demo.DeformableMirrorDeviceDemoHelper;
@@ -199,6 +200,12 @@ public class BScopeMicroscope extends SimulatedLightSheetMicroscope
       SpatialPhaseModulatorDeviceBase
           lSpatialPhaseModulatorDeviceBase = new AlpaoDMDevice(1);
       addDevice(0, lSpatialPhaseModulatorDeviceBase);
+
+
+      SpatialPhaseModulatorExperimentScheduler lSpatialPhaseModulatorExperimentScheduler =
+          new SpatialPhaseModulatorExperimentScheduler(lSpatialPhaseModulatorDeviceBase);
+      addDevice(0, lSpatialPhaseModulatorExperimentScheduler);
+
     }
 
     {
@@ -231,6 +238,13 @@ public class BScopeMicroscope extends SimulatedLightSheetMicroscope
       //addDevice(0, lAlpaoDMDevice);
       SpatialPhaseModulatorDeviceBase lSpatialPhaseModulatorDeviceBase = new SpatialPhaseModulatorDeviceSimulator("Simulated Spatial Phase Modulator Device", 11, 1);
       addDevice(0, lSpatialPhaseModulatorDeviceBase);
+
+
+      SpatialPhaseModulatorExperimentScheduler
+          lSpatialPhaseModulatorExperimentScheduler =
+          new SpatialPhaseModulatorExperimentScheduler(lSpatialPhaseModulatorDeviceBase);
+      addDevice(0, lSpatialPhaseModulatorExperimentScheduler);
+
     }
 
     {
