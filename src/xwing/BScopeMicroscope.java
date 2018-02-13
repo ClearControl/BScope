@@ -20,8 +20,8 @@ import clearcontrol.microscope.lightsheet.component.opticalswitch.LightSheetOpti
 import clearcontrol.microscope.lightsheet.signalgen.LightSheetSignalGeneratorDevice;
 import clearcontrol.microscope.lightsheet.simulation.LightSheetMicroscopeSimulationDevice;
 import clearcontrol.microscope.lightsheet.simulation.SimulatedLightSheetMicroscope;
-import clearcontrol.microscope.lightsheet.spatialphasemodulation.experimentscheduler.SpatialPhaseModulatorExperimentScheduler;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.gui.jfx.DeformableMirrorPanel;
+import clearcontrol.microscope.lightsheet.spatialphasemodulation.scheduler.MirrorModeScheduler;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.slms.SpatialPhaseModulatorDeviceBase;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.slms.demo.DeformableMirrorDeviceDemoHelper;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.slms.devices.alpao.AlpaoDMDevice;
@@ -202,9 +202,9 @@ public class BScopeMicroscope extends SimulatedLightSheetMicroscope
       addDevice(0, lSpatialPhaseModulatorDeviceBase);
 
 
-      SpatialPhaseModulatorExperimentScheduler lSpatialPhaseModulatorExperimentScheduler =
-          new SpatialPhaseModulatorExperimentScheduler(lSpatialPhaseModulatorDeviceBase);
-      addDevice(0, lSpatialPhaseModulatorExperimentScheduler);
+      MirrorModeScheduler lMirrorModeScheduler =
+          new MirrorModeScheduler(lSpatialPhaseModulatorDeviceBase);
+      addDevice(0, lMirrorModeScheduler);
 
     }
 
@@ -240,10 +240,10 @@ public class BScopeMicroscope extends SimulatedLightSheetMicroscope
       addDevice(0, lSpatialPhaseModulatorDeviceBase);
 
 
-      SpatialPhaseModulatorExperimentScheduler
-          lSpatialPhaseModulatorExperimentScheduler =
-          new SpatialPhaseModulatorExperimentScheduler(lSpatialPhaseModulatorDeviceBase);
-      addDevice(0, lSpatialPhaseModulatorExperimentScheduler);
+      MirrorModeScheduler
+          lMirrorModeScheduler =
+          new MirrorModeScheduler(lSpatialPhaseModulatorDeviceBase);
+      addDevice(0, lMirrorModeScheduler);
 
     }
 
