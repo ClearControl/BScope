@@ -15,12 +15,16 @@ buildscript {
 }
 
 
-plugins { id "us.kirchmeier.capsule" version "1.0.2" }
+plugins {
+    id "com.jfrog.bintray" version "1.2"
+    id "us.kirchmeier.capsule" version "1.0.2"
+}
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'maven'
+apply plugin: 'maven-publish'
 apply plugin: 'launch4j'
 apply plugin: 'javafx-gradle-plugin'
 apply plugin: 'application'
@@ -65,7 +69,9 @@ def getVersionName = {
 }
 
 sourceCompatibility = 1.8
-version = getVersionName()
+
+group = 'net.clearcontrol'
+version = "2.0.1"; //getVersionName()
 
 test
 {
@@ -90,7 +96,7 @@ dependencies
 
   // ClearControl:
     compile ('net.clearvolume:cleargl:2.0.4')
-    compile ('net.clearcontrol:clearcontrol-lightsheet:1.15.8-RH')      {transitive= true; changing= true}
+    compile ('net.clearcontrol:clearcontrol-lightsheet:1.20.1')      {transitive= true; changing= true}
 
 
     compile group: 'junit', name: 'junit', version: '4.+'
@@ -135,6 +141,17 @@ repositories
 
 }
 
+
+task sourcesJar(type: Jar, dependsOn:classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn:javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
 task xwingapp(type: FatCapsule) {
 	applicationClass 'xwing.main.BScopeMain'
 	baseName "xwingapp_${getDate()}.jar"
@@ -146,6 +163,23 @@ launch4j {
 	jar = 'xwingapp${getDate()}.jar'
 }
 
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+            artifact sourcesJar { classifier "sources" }
+        }
+    }
+}
+
+
+apply from: 'gradle/bintrayUpload.gradle'
 
 //***********************************************************************************
 // APP PACKAGING
