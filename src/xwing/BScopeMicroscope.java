@@ -4,8 +4,11 @@ import clearcl.ClearCLContext;
 import clearcontrol.anything.AnythingDevice;
 import clearcontrol.devices.cameras.StackCameraDeviceInterface;
 import clearcontrol.devices.cameras.devices.hamamatsu.HamStackCamera;
+import clearcontrol.devices.lasers.LaserDeviceInterface;
 import clearcontrol.devices.lasers.devices.cobolt.CoboltLaserDevice;
 import clearcontrol.devices.lasers.devices.omicron.OmicronLaserDevice;
+import clearcontrol.devices.lasers.schedulers.LaserOnOffScheduler;
+import clearcontrol.devices.lasers.schedulers.LaserPowerScheduler;
 import clearcontrol.devices.optomech.filterwheels.devices.fli.FLIFilterWheelDevice;
 import clearcontrol.devices.optomech.filterwheels.devices.sim.FilterWheelDeviceSimulator;
 import clearcontrol.devices.signalamp.devices.srs.SIM900MainframeDevice;
@@ -68,8 +71,8 @@ public class BScopeMicroscope extends SimulatedLightSheetMicroscope
   public void addRealHardwareDevices(int pNumberOfDetectionArms,
                                      int pNumberOfLightSheets)
   {
-    long lDefaultStackWidth = 1024;
-    long lDefaultStackHeight = 2048;
+    long lDefaultStackWidth = 512;
+    long lDefaultStackHeight = 512;
 
     // Setting up lasers:
     {
@@ -97,6 +100,21 @@ public class BScopeMicroscope extends SimulatedLightSheetMicroscope
                                 100,
                                 5);
       addDevice(1, lLaserDevice594);/**/
+
+      LaserDeviceInterface[] laserList= {lLaserDevice405, lLaserDevice488, lLaserDevice515, lLaserDevice561, lLaserDevice594};
+
+      for (LaserDeviceInterface laser : laserList) {
+        addDevice(0, new LaserPowerScheduler(laser, 0.0));
+        addDevice(0, new LaserPowerScheduler(laser, 1.0));
+        addDevice(0, new LaserPowerScheduler(laser, 5.0));
+        addDevice(0, new LaserPowerScheduler(laser, 10.0));
+        addDevice(0, new LaserPowerScheduler(laser, 20.0));
+        addDevice(0, new LaserPowerScheduler(laser, 50.0));
+        addDevice(0, new LaserPowerScheduler(laser, 100.0));
+
+        addDevice(0, new LaserOnOffScheduler(laser, true));
+        addDevice(0, new LaserOnOffScheduler(laser, false));
+      }
 
     }
 
@@ -208,10 +226,6 @@ public class BScopeMicroscope extends SimulatedLightSheetMicroscope
 
     }
 
-    {
-      AnythingDevice lAnyDevice = new AnythingDevice();
-      addDevice(0, lAnyDevice);
-    }
 
     System.out.println("DEVICES ADDED");
   }
@@ -245,11 +259,6 @@ public class BScopeMicroscope extends SimulatedLightSheetMicroscope
           new MirrorModeScheduler(lSpatialPhaseModulatorDeviceBase);
       addDevice(0, lMirrorModeScheduler);
 
-    }
-
-    {
-      AnythingDevice lAnyDevice = new AnythingDevice();
-      addDevice(0, lAnyDevice);
     }
   }
 

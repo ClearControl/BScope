@@ -27,7 +27,7 @@ import xwing.BScopeMicroscope;
 import xwing.gui.BScopeGui;
 
 /**
- * Xwing main class
+ * BScope main class
  *
  * @author royer
  * @author haesleinhuepf
