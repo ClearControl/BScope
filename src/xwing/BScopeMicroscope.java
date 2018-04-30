@@ -24,6 +24,8 @@ import clearcontrol.microscope.lightsheet.signalgen.LightSheetSignalGeneratorDev
 import clearcontrol.microscope.lightsheet.simulation.LightSheetMicroscopeSimulationDevice;
 import clearcontrol.microscope.lightsheet.simulation.SimulatedLightSheetMicroscope;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.gui.jfx.DeformableMirrorPanel;
+import clearcontrol.microscope.lightsheet.spatialphasemodulation.optimizer.geneticalgorithm.scheduler.GeneticAlgorithmMirrorModeOptimizeScheduler;
+import clearcontrol.microscope.lightsheet.spatialphasemodulation.scheduler.LogMirrorModeToFileScheduler;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.scheduler.MirrorModeScheduler;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.slms.SpatialPhaseModulatorDeviceBase;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.slms.demo.DeformableMirrorDeviceDemoHelper;
@@ -225,6 +227,8 @@ public class BScopeMicroscope extends SimulatedLightSheetMicroscope
           new MirrorModeScheduler(lSpatialPhaseModulatorDeviceBase);
       addDevice(0, lMirrorModeScheduler);
 
+      addDevice(0, new LogMirrorModeToFileScheduler(lSpatialPhaseModulatorDeviceBase));
+      addDevice(0, new GeneticAlgorithmMirrorModeOptimizeScheduler(lSpatialPhaseModulatorDeviceBase));
     }
 
 
