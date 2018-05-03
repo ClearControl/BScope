@@ -96,7 +96,8 @@ dependencies
 
   // ClearControl:
     compile ('net.clearvolume:cleargl:2.0.4')
-    compile ('net.clearcontrol:clearcontrol-lightsheet:1.24.2')      {transitive= true; changing= true}
+    
+    compile ('net.clearcontrol:clearcontrol-lightsheet:1.24.3')      {transitive= true; changing= true}
 
 
     compile group: 'junit', name: 'junit', version: '4.11'
