@@ -80,31 +80,32 @@ public class BScopeMicroscope extends SimulatedLightSheetMicroscope
     // Setting up lasers:
     {
 
-      final OmicronLaserDevice lLaserDevice405 =
-          new OmicronLaserDevice(1);
-      addDevice(0, lLaserDevice405);
+      //final OmicronLaserDevice lLaserDevice405 =
+      //    new OmicronLaserDevice(1);
+      //addDevice(0, lLaserDevice405);
 
       final OmicronLaserDevice lLaserDevice488 =
           new OmicronLaserDevice(2);
       addDevice(0, lLaserDevice488);
 
-      final OmicronLaserDevice lLaserDevice515 =
-          new OmicronLaserDevice(3);
-      addDevice(0, lLaserDevice515);
+      //final OmicronLaserDevice lLaserDevice515 =
+      //    new OmicronLaserDevice(3);
+      //addDevice(0, lLaserDevice515);
 
-      final CoboltLaserDevice lLaserDevice561 =
-          new CoboltLaserDevice("Jive",
-                                100,
-                                4);
-      addDevice(1, lLaserDevice561);/**/
+      //final CoboltLaserDevice lLaserDevice561 =
+      //    new CoboltLaserDevice("Jive",
+      //                          100,
+      //                          4);
+      //addDevice(1, lLaserDevice561);/**/
 
-      final CoboltLaserDevice lLaserDevice594 =
-          new CoboltLaserDevice("Mambo",
-                                100,
-                                5);
-      addDevice(1, lLaserDevice594);/**/
+      //final CoboltLaserDevice lLaserDevice594 =
+      //    new CoboltLaserDevice("Mambo",
+      //                          100,
+      //                          5);
+      //addDevice(1, lLaserDevice594);/**/
 
-      LaserDeviceInterface[] laserList= {lLaserDevice405, lLaserDevice488, lLaserDevice515, lLaserDevice561, lLaserDevice594};
+      LaserDeviceInterface[] laserList={lLaserDevice488};
+              //{lLaserDevice405, lLaserDevice488, lLaserDevice515, lLaserDevice561, lLaserDevice594};
 
       for (LaserDeviceInterface laser : laserList) {
         addDevice(0, new LaserPowerScheduler(laser, 0.0));
@@ -230,11 +231,8 @@ public class BScopeMicroscope extends SimulatedLightSheetMicroscope
           new MirrorModeScheduler(lAlpaoMirror);
       addDevice(0, lMirrorModeScheduler);
 
-      GeneticAlgorithmMirrorModeOptimizeScheduler lGAOptimizer = new GeneticAlgorithmMirrorModeOptimizeScheduler(lAlpaoMirror);
-      addDevice(0, lGAOptimizer);
-
-      LogMirrorModeToFileScheduler lLogMirrorModeToFileScheduler = new LogMirrorModeToFileScheduler(lAlpaoMirror);
-      addDevice(0, lLogMirrorModeToFileScheduler);
+      addDevice(0, new LogMirrorModeToFileScheduler(lSpatialPhaseModulatorDeviceBase));
+      addDevice(0, new GeneticAlgorithmMirrorModeOptimizeScheduler(lSpatialPhaseModulatorDeviceBase));
     }
 
 
