@@ -4,6 +4,7 @@ import clearcl.ClearCLContext;
 import clearcontrol.anything.AnythingDevice;
 import clearcontrol.devices.cameras.StackCameraDeviceInterface;
 import clearcontrol.devices.cameras.devices.hamamatsu.HamStackCamera;
+import clearcontrol.devices.filterwheel.schedulers.FilterWheelScheduler;
 import clearcontrol.devices.lasers.LaserDeviceInterface;
 import clearcontrol.devices.lasers.devices.cobolt.CoboltLaserDevice;
 import clearcontrol.devices.lasers.devices.omicron.OmicronLaserDevice;
@@ -24,6 +25,8 @@ import clearcontrol.microscope.lightsheet.signalgen.LightSheetSignalGeneratorDev
 import clearcontrol.microscope.lightsheet.simulation.LightSheetMicroscopeSimulationDevice;
 import clearcontrol.microscope.lightsheet.simulation.SimulatedLightSheetMicroscope;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.gui.jfx.DeformableMirrorPanel;
+import clearcontrol.microscope.lightsheet.spatialphasemodulation.optimizer.geneticalgorithm.scheduler.GeneticAlgorithmMirrorModeOptimizeScheduler;
+import clearcontrol.microscope.lightsheet.spatialphasemodulation.scheduler.LogMirrorModeToFileScheduler;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.scheduler.MirrorModeScheduler;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.slms.SpatialPhaseModulatorDeviceBase;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.slms.demo.DeformableMirrorDeviceDemoHelper;
@@ -209,6 +212,9 @@ public class BScopeMicroscope extends SimulatedLightSheetMicroscope
     {
       FLIFilterWheelDevice lFLIFilterWheelDevice = new FLIFilterWheelDevice(1);
       addDevice(0, lFLIFilterWheelDevice);
+      for(int f:lFLIFilterWheelDevice.getValidPositions()) {
+        addDevice(0, new FilterWheelScheduler(lFLIFilterWheelDevice, f));
+      }
     }
 
     // setup deformable mirror
@@ -216,14 +222,19 @@ public class BScopeMicroscope extends SimulatedLightSheetMicroscope
       //AlpaoDMDevice lAlpaoDMDevice = new AlpaoDMDevice(1);
       //addDevice(0, lAlpaoDMDevice);
       SpatialPhaseModulatorDeviceBase
-          lSpatialPhaseModulatorDeviceBase = new AlpaoDMDevice(1);
-      addDevice(0, lSpatialPhaseModulatorDeviceBase);
+          lAlpaoMirror = new AlpaoDMDevice(1);
+      addDevice(0, lAlpaoMirror);
 
 
       MirrorModeScheduler lMirrorModeScheduler =
-          new MirrorModeScheduler(lSpatialPhaseModulatorDeviceBase);
+          new MirrorModeScheduler(lAlpaoMirror);
       addDevice(0, lMirrorModeScheduler);
 
+      GeneticAlgorithmMirrorModeOptimizeScheduler lGAOptimizer = new GeneticAlgorithmMirrorModeOptimizeScheduler(lAlpaoMirror);
+      addDevice(0, lGAOptimizer);
+
+      LogMirrorModeToFileScheduler lLogMirrorModeToFileScheduler = new LogMirrorModeToFileScheduler(lAlpaoMirror);
+      addDevice(0, lLogMirrorModeToFileScheduler);
     }
 
 
