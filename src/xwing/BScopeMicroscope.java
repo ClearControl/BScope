@@ -231,8 +231,8 @@ public class BScopeMicroscope extends SimulatedLightSheetMicroscope
           new MirrorModeScheduler(lAlpaoMirror);
       addDevice(0, lMirrorModeScheduler);
 
-      addDevice(0, new LogMirrorModeToFileScheduler(lSpatialPhaseModulatorDeviceBase));
-      addDevice(0, new GeneticAlgorithmMirrorModeOptimizeScheduler(lSpatialPhaseModulatorDeviceBase));
+      addDevice(0, new LogMirrorModeToFileScheduler(lAlpaoMirror));
+      addDevice(0, new GeneticAlgorithmMirrorModeOptimizeScheduler(lAlpaoMirror));
     }
 
 
