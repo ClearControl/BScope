@@ -21,6 +21,7 @@ import clearcontrol.devices.stages.hub.StageHubDevice;
 import clearcontrol.microscope.lightsheet.component.detection.DetectionArm;
 import clearcontrol.microscope.lightsheet.component.lightsheet.LightSheet;
 import clearcontrol.microscope.lightsheet.component.opticalswitch.LightSheetOpticalSwitch;
+import clearcontrol.microscope.lightsheet.postprocessing.measurements.schedulers.MeasureDCTS2DOnStackScheduler;
 import clearcontrol.microscope.lightsheet.signalgen.LightSheetSignalGeneratorDevice;
 import clearcontrol.microscope.lightsheet.simulation.LightSheetMicroscopeSimulationDevice;
 import clearcontrol.microscope.lightsheet.simulation.SimulatedLightSheetMicroscope;
@@ -32,6 +33,7 @@ import clearcontrol.microscope.lightsheet.spatialphasemodulation.slms.SpatialPha
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.slms.demo.DeformableMirrorDeviceDemoHelper;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.slms.devices.alpao.AlpaoDMDevice;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.slms.devices.sim.SpatialPhaseModulatorDeviceSimulator;
+import clearcontrol.microscope.lightsheet.warehouse.containers.StackInterfaceContainer;
 
 /**
  * BScope microscope
@@ -235,6 +237,8 @@ public class BScopeMicroscope extends SimulatedLightSheetMicroscope
       addDevice(0, new GeneticAlgorithmMirrorModeOptimizeScheduler(lAlpaoMirror));
     }
 
+    //Measure Image Quality Scheduler
+    addDevice(0, new MeasureDCTS2DOnStackScheduler<StackInterfaceContainer>(StackInterfaceContainer.class));
 
     System.out.println("DEVICES ADDED");
   }
