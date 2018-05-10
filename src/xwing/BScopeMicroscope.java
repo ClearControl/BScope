@@ -29,6 +29,7 @@ import clearcontrol.microscope.lightsheet.spatialphasemodulation.gui.jfx.Deforma
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.optimizer.geneticalgorithm.scheduler.GeneticAlgorithmMirrorModeOptimizeScheduler;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.scheduler.LogMirrorModeToFileScheduler;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.scheduler.MirrorModeScheduler;
+import clearcontrol.microscope.lightsheet.spatialphasemodulation.scheduler.RandomActuatorPositionScheduler;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.slms.SpatialPhaseModulatorDeviceBase;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.slms.demo.DeformableMirrorDeviceDemoHelper;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.slms.devices.alpao.AlpaoDMDevice;
@@ -235,6 +236,11 @@ public class BScopeMicroscope extends SimulatedLightSheetMicroscope
 
       addDevice(0, new LogMirrorModeToFileScheduler(lAlpaoMirror));
       addDevice(0, new GeneticAlgorithmMirrorModeOptimizeScheduler(lAlpaoMirror));
+
+
+      RandomActuatorPositionScheduler lRandomActuatorPositon =
+              new RandomActuatorPositionScheduler(lAlpaoMirror);
+      addDevice(0, lRandomActuatorPositon);
     }
 
     //Measure Image Quality Scheduler
