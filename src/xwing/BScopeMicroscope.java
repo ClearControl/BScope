@@ -27,7 +27,9 @@ import clearcontrol.microscope.lightsheet.simulation.LightSheetMicroscopeSimulat
 import clearcontrol.microscope.lightsheet.simulation.SimulatedLightSheetMicroscope;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.gui.jfx.DeformableMirrorPanel;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.optimizer.geneticalgorithm.scheduler.GeneticAlgorithmMirrorModeOptimizeScheduler;
+import clearcontrol.microscope.lightsheet.spatialphasemodulation.optimizer.gradientbased.GradientBasedFocusOptimizerScheduler;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.scheduler.LogMirrorModeToFileScheduler;
+import clearcontrol.microscope.lightsheet.spatialphasemodulation.scheduler.LogMirrorZernikeFactorsToFileScheduler;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.scheduler.MirrorModeScheduler;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.scheduler.RandomActuatorPositionScheduler;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.slms.SpatialPhaseModulatorDeviceBase;
@@ -225,7 +227,7 @@ public class BScopeMicroscope extends SimulatedLightSheetMicroscope
     {
       //AlpaoDMDevice lAlpaoDMDevice = new AlpaoDMDevice(1);
       //addDevice(0, lAlpaoDMDevice);
-      SpatialPhaseModulatorDeviceBase
+      AlpaoDMDevice
           lAlpaoMirror = new AlpaoDMDevice(1);
       addDevice(0, lAlpaoMirror);
 
@@ -236,6 +238,8 @@ public class BScopeMicroscope extends SimulatedLightSheetMicroscope
 
       addDevice(0, new LogMirrorModeToFileScheduler(lAlpaoMirror));
       addDevice(0, new GeneticAlgorithmMirrorModeOptimizeScheduler(lAlpaoMirror));
+      addDevice(0, new GradientBasedFocusOptimizerScheduler(this, lAlpaoMirror));
+      addDevice(0, new LogMirrorZernikeFactorsToFileScheduler(lAlpaoMirror));
 
 
       RandomActuatorPositionScheduler lRandomActuatorPositon =
@@ -269,13 +273,13 @@ public class BScopeMicroscope extends SimulatedLightSheetMicroscope
     {
       //AlpaoDMDevice lAlpaoDMDevice = new AlpaoDMDevice(1);
       //addDevice(0, lAlpaoDMDevice);
-      SpatialPhaseModulatorDeviceBase lSpatialPhaseModulatorDeviceBase = new SpatialPhaseModulatorDeviceSimulator("Simulated Spatial Phase Modulator Device", 11, 1);
-      addDevice(0, lSpatialPhaseModulatorDeviceBase);
+      SpatialPhaseModulatorDeviceSimulator lSpatialPhaseModulatorDeviceSimulator = new SpatialPhaseModulatorDeviceSimulator("Simulated Spatial Phase Modulator Device", 11, 1, 6);
+      addDevice(0, lSpatialPhaseModulatorDeviceSimulator);
 
 
       MirrorModeScheduler
           lMirrorModeScheduler =
-          new MirrorModeScheduler(lSpatialPhaseModulatorDeviceBase);
+          new MirrorModeScheduler(lSpatialPhaseModulatorDeviceSimulator);
       addDevice(0, lMirrorModeScheduler);
 
     }
