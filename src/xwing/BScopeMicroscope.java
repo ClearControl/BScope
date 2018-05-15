@@ -28,10 +28,7 @@ import clearcontrol.microscope.lightsheet.simulation.SimulatedLightSheetMicrosco
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.gui.jfx.DeformableMirrorPanel;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.optimizer.geneticalgorithm.scheduler.GeneticAlgorithmMirrorModeOptimizeScheduler;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.optimizer.gradientbased.GradientBasedFocusOptimizerScheduler;
-import clearcontrol.microscope.lightsheet.spatialphasemodulation.scheduler.LogMirrorModeToFileScheduler;
-import clearcontrol.microscope.lightsheet.spatialphasemodulation.scheduler.LogMirrorZernikeFactorsToFileScheduler;
-import clearcontrol.microscope.lightsheet.spatialphasemodulation.scheduler.MirrorModeScheduler;
-import clearcontrol.microscope.lightsheet.spatialphasemodulation.scheduler.RandomActuatorPositionScheduler;
+import clearcontrol.microscope.lightsheet.spatialphasemodulation.scheduler.*;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.slms.SpatialPhaseModulatorDeviceBase;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.slms.demo.DeformableMirrorDeviceDemoHelper;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.slms.devices.alpao.AlpaoDMDevice;
@@ -236,15 +233,17 @@ public class BScopeMicroscope extends SimulatedLightSheetMicroscope
           new MirrorModeScheduler(lAlpaoMirror);
       addDevice(0, lMirrorModeScheduler);
 
+      RandomZernikesScheduler
+              lRandomZernikesScheduler =
+              new RandomZernikesScheduler(lAlpaoMirror);
+      addDevice(0, lRandomZernikesScheduler);
+
       addDevice(0, new LogMirrorModeToFileScheduler(lAlpaoMirror));
       addDevice(0, new GeneticAlgorithmMirrorModeOptimizeScheduler(lAlpaoMirror));
       addDevice(0, new GradientBasedFocusOptimizerScheduler(this, lAlpaoMirror));
       addDevice(0, new LogMirrorZernikeFactorsToFileScheduler(lAlpaoMirror));
 
 
-      RandomActuatorPositionScheduler lRandomActuatorPositon =
-              new RandomActuatorPositionScheduler(lAlpaoMirror);
-      addDevice(0, lRandomActuatorPositon);
     }
 
     //Measure Image Quality Scheduler
@@ -281,6 +280,11 @@ public class BScopeMicroscope extends SimulatedLightSheetMicroscope
           lMirrorModeScheduler =
           new MirrorModeScheduler(lSpatialPhaseModulatorDeviceSimulator);
       addDevice(0, lMirrorModeScheduler);
+
+      RandomZernikesScheduler
+              lRandomZernikesScheduler =
+              new RandomZernikesScheduler(lSpatialPhaseModulatorDeviceSimulator);
+      addDevice(0, lRandomZernikesScheduler);
 
     }
   }
