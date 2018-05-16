@@ -232,14 +232,11 @@ public class BScopeMicroscope extends SimulatedLightSheetMicroscope
               new SequentialZernikesScheduler(lAlpaoMirror,0.1,0.0,5.0,-5.0);
       addDevice(0, lSequentialZernikesScheduler);
 
-      addDevice(0, new LogMirrorModeToFileScheduler(lAlpaoMirror));
-      addDevice(0, new GeneticAlgorithmMirrorModeOptimizeScheduler(lAlpaoMirror));
+      addDevice(0, new LogMirrorZernikeFactorsToFileScheduler(lAlpaoMirror));
       addDevice(0, new GradientBasedZernikeModeOptimizerScheduler(this, lAlpaoMirror, 3));
       addDevice(0, new GradientBasedZernikeModeOptimizerScheduler(this, lAlpaoMirror, 4));
       addDevice(0, new GradientBasedZernikeModeOptimizerScheduler(this, lAlpaoMirror, 5));
       addDevice(0, new LogMirrorZernikeFactorsToFileScheduler(lAlpaoMirror));
-
-
     }
 
     //Measure Image Quality Scheduler
