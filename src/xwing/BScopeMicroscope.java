@@ -1,23 +1,16 @@
 package xwing;
 
 import clearcl.ClearCLContext;
-import clearcontrol.anything.AnythingDevice;
 import clearcontrol.devices.cameras.StackCameraDeviceInterface;
 import clearcontrol.devices.cameras.devices.hamamatsu.HamStackCamera;
 import clearcontrol.devices.filterwheel.schedulers.FilterWheelScheduler;
 import clearcontrol.devices.lasers.LaserDeviceInterface;
-import clearcontrol.devices.lasers.devices.cobolt.CoboltLaserDevice;
 import clearcontrol.devices.lasers.devices.omicron.OmicronLaserDevice;
 import clearcontrol.devices.lasers.schedulers.LaserOnOffScheduler;
 import clearcontrol.devices.lasers.schedulers.LaserPowerScheduler;
 import clearcontrol.devices.optomech.filterwheels.devices.fli.FLIFilterWheelDevice;
 import clearcontrol.devices.optomech.filterwheels.devices.sim.FilterWheelDeviceSimulator;
-import clearcontrol.devices.signalamp.devices.srs.SIM900MainframeDevice;
-import clearcontrol.devices.signalamp.devices.srs.SIM983ScalingAmplifierDevice;
 import clearcontrol.devices.signalgen.devices.nirio.NIRIOSignalGenerator;
-import clearcontrol.devices.stages.StageType;
-import clearcontrol.devices.stages.devices.tst.TSTStageDevice;
-import clearcontrol.devices.stages.hub.StageHubDevice;
 import clearcontrol.microscope.lightsheet.component.detection.DetectionArm;
 import clearcontrol.microscope.lightsheet.component.lightsheet.LightSheet;
 import clearcontrol.microscope.lightsheet.component.opticalswitch.LightSheetOpticalSwitch;
@@ -25,12 +18,12 @@ import clearcontrol.microscope.lightsheet.postprocessing.measurements.schedulers
 import clearcontrol.microscope.lightsheet.signalgen.LightSheetSignalGeneratorDevice;
 import clearcontrol.microscope.lightsheet.simulation.LightSheetMicroscopeSimulationDevice;
 import clearcontrol.microscope.lightsheet.simulation.SimulatedLightSheetMicroscope;
-import clearcontrol.microscope.lightsheet.spatialphasemodulation.gui.jfx.DeformableMirrorPanel;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.optimizer.geneticalgorithm.scheduler.GeneticAlgorithmMirrorModeOptimizeScheduler;
-import clearcontrol.microscope.lightsheet.spatialphasemodulation.optimizer.gradientbased.GradientBasedFocusOptimizerScheduler;
-import clearcontrol.microscope.lightsheet.spatialphasemodulation.scheduler.*;
-import clearcontrol.microscope.lightsheet.spatialphasemodulation.slms.SpatialPhaseModulatorDeviceBase;
-import clearcontrol.microscope.lightsheet.spatialphasemodulation.slms.demo.DeformableMirrorDeviceDemoHelper;
+import clearcontrol.microscope.lightsheet.spatialphasemodulation.optimizer.gradientbased.GradientBasedZernikeModeOptimizerScheduler;
+import clearcontrol.microscope.lightsheet.spatialphasemodulation.scheduler.LoadMirrorModesFromFolderScheduler;
+import clearcontrol.microscope.lightsheet.spatialphasemodulation.scheduler.LogMirrorModeToFileScheduler;
+import clearcontrol.microscope.lightsheet.spatialphasemodulation.scheduler.LogMirrorZernikeFactorsToFileScheduler;
+import clearcontrol.microscope.lightsheet.spatialphasemodulation.scheduler.RandomActuatorPositionScheduler;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.slms.devices.alpao.AlpaoDMDevice;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.slms.devices.sim.SpatialPhaseModulatorDeviceSimulator;
 import clearcontrol.microscope.lightsheet.warehouse.containers.StackInterfaceContainer;
@@ -229,8 +222,8 @@ public class BScopeMicroscope extends SimulatedLightSheetMicroscope
       addDevice(0, lAlpaoMirror);
 
 
-      MirrorModeScheduler lMirrorModeScheduler =
-          new MirrorModeScheduler(lAlpaoMirror);
+      LoadMirrorModesFromFolderScheduler lMirrorModeScheduler =
+          new LoadMirrorModesFromFolderScheduler(lAlpaoMirror);
       addDevice(0, lMirrorModeScheduler);
 
       RandomZernikesScheduler
@@ -244,7 +237,9 @@ public class BScopeMicroscope extends SimulatedLightSheetMicroscope
 
       addDevice(0, new LogMirrorModeToFileScheduler(lAlpaoMirror));
       addDevice(0, new GeneticAlgorithmMirrorModeOptimizeScheduler(lAlpaoMirror));
-      addDevice(0, new GradientBasedFocusOptimizerScheduler(this, lAlpaoMirror));
+      addDevice(0, new GradientBasedZernikeModeOptimizerScheduler(this, lAlpaoMirror, 3));
+      addDevice(0, new GradientBasedZernikeModeOptimizerScheduler(this, lAlpaoMirror, 4));
+      addDevice(0, new GradientBasedZernikeModeOptimizerScheduler(this, lAlpaoMirror, 5));
       addDevice(0, new LogMirrorZernikeFactorsToFileScheduler(lAlpaoMirror));
 
 
@@ -280,9 +275,9 @@ public class BScopeMicroscope extends SimulatedLightSheetMicroscope
       addDevice(0, lSpatialPhaseModulatorDeviceSimulator);
 
 
-      MirrorModeScheduler
+      LoadMirrorModesFromFolderScheduler
           lMirrorModeScheduler =
-          new MirrorModeScheduler(lSpatialPhaseModulatorDeviceSimulator);
+          new LoadMirrorModesFromFolderScheduler(lSpatialPhaseModulatorDeviceSimulator);
       addDevice(0, lMirrorModeScheduler);
 
       RandomZernikesScheduler
