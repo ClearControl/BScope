@@ -3,24 +3,27 @@ package xwing;
 import clearcl.ClearCLContext;
 import clearcontrol.devices.cameras.StackCameraDeviceInterface;
 import clearcontrol.devices.cameras.devices.hamamatsu.HamStackCamera;
-import clearcontrol.devices.filterwheel.schedulers.FilterWheelScheduler;
+import clearcontrol.devices.filterwheel.instructions.FilterWheelInstruction;
 import clearcontrol.devices.lasers.LaserDeviceInterface;
 import clearcontrol.devices.lasers.devices.omicron.OmicronLaserDevice;
-import clearcontrol.devices.lasers.schedulers.LaserOnOffScheduler;
-import clearcontrol.devices.lasers.schedulers.LaserPowerScheduler;
+import clearcontrol.devices.lasers.instructions.LaserOnOffInstruction;
+import clearcontrol.devices.lasers.instructions.LaserPowerInstruction;
 import clearcontrol.devices.optomech.filterwheels.devices.fli.FLIFilterWheelDevice;
 import clearcontrol.devices.optomech.filterwheels.devices.sim.FilterWheelDeviceSimulator;
 import clearcontrol.devices.signalgen.devices.nirio.NIRIOSignalGenerator;
 import clearcontrol.microscope.lightsheet.component.detection.DetectionArm;
 import clearcontrol.microscope.lightsheet.component.lightsheet.LightSheet;
 import clearcontrol.microscope.lightsheet.component.opticalswitch.LightSheetOpticalSwitch;
-import clearcontrol.microscope.lightsheet.postprocessing.measurements.schedulers.MeasureDCTS2DOnStackScheduler;
+import clearcontrol.microscope.lightsheet.postprocessing.measurements.instructions.MeasureDCTS2DOnStackInstruction;
 import clearcontrol.microscope.lightsheet.signalgen.LightSheetSignalGeneratorDevice;
 import clearcontrol.microscope.lightsheet.simulation.LightSheetMicroscopeSimulationDevice;
 import clearcontrol.microscope.lightsheet.simulation.SimulatedLightSheetMicroscope;
-import clearcontrol.microscope.lightsheet.spatialphasemodulation.optimizer.geneticalgorithm.scheduler.GeneticAlgorithmMirrorModeOptimizeScheduler;
-import clearcontrol.microscope.lightsheet.spatialphasemodulation.optimizer.gradientbased.GradientBasedZernikeModeOptimizerScheduler;
-import clearcontrol.microscope.lightsheet.spatialphasemodulation.scheduler.*;
+import clearcontrol.microscope.lightsheet.spatialphasemodulation.instructions.LoadMirrorModesFromFolderInstruction;
+import clearcontrol.microscope.lightsheet.spatialphasemodulation.instructions.LogMirrorZernikeFactorsToFileInstruction;
+import clearcontrol.microscope.lightsheet.spatialphasemodulation.instructions.RandomZernikesInstruction;
+import clearcontrol.microscope.lightsheet.spatialphasemodulation.instructions.SequentialZernikesInstruction;
+import clearcontrol.microscope.lightsheet.spatialphasemodulation.instructions.gui.SequentialZernikesInstructionPanel;
+import clearcontrol.microscope.lightsheet.spatialphasemodulation.optimizer.gradientbased.GradientBasedZernikeModeOptimizerInstruction;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.slms.devices.alpao.AlpaoDMDevice;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.slms.devices.sim.SpatialPhaseModulatorDeviceSimulator;
 import clearcontrol.microscope.lightsheet.warehouse.containers.StackInterfaceContainer;
@@ -100,16 +103,16 @@ public class BScopeMicroscope extends SimulatedLightSheetMicroscope
               //{lLaserDevice405, lLaserDevice488, lLaserDevice515, lLaserDevice561, lLaserDevice594};
 
       for (LaserDeviceInterface laser : laserList) {
-        addDevice(0, new LaserPowerScheduler(laser, 0.0));
-        addDevice(0, new LaserPowerScheduler(laser, 1.0));
-        addDevice(0, new LaserPowerScheduler(laser, 5.0));
-        addDevice(0, new LaserPowerScheduler(laser, 10.0));
-        addDevice(0, new LaserPowerScheduler(laser, 20.0));
-        addDevice(0, new LaserPowerScheduler(laser, 50.0));
-        addDevice(0, new LaserPowerScheduler(laser, 100.0));
+        addDevice(0, new LaserPowerInstruction(laser, 0.0));
+        addDevice(0, new LaserPowerInstruction(laser, 1.0));
+        addDevice(0, new LaserPowerInstruction(laser, 5.0));
+        addDevice(0, new LaserPowerInstruction(laser, 10.0));
+        addDevice(0, new LaserPowerInstruction(laser, 20.0));
+        addDevice(0, new LaserPowerInstruction(laser, 50.0));
+        addDevice(0, new LaserPowerInstruction(laser, 100.0));
 
-        addDevice(0, new LaserOnOffScheduler(laser, true));
-        addDevice(0, new LaserOnOffScheduler(laser, false));
+        addDevice(0, new LaserOnOffInstruction(laser, true));
+        addDevice(0, new LaserOnOffInstruction(laser, false));
       }
 
     }
@@ -206,7 +209,7 @@ public class BScopeMicroscope extends SimulatedLightSheetMicroscope
       FLIFilterWheelDevice lFLIFilterWheelDevice = new FLIFilterWheelDevice(1);
       addDevice(0, lFLIFilterWheelDevice);
       for(int f:lFLIFilterWheelDevice.getValidPositions()) {
-        addDevice(0, new FilterWheelScheduler(lFLIFilterWheelDevice, f));
+        addDevice(0, new FilterWheelInstruction(lFLIFilterWheelDevice, f));
       }
     }
 
@@ -219,28 +222,27 @@ public class BScopeMicroscope extends SimulatedLightSheetMicroscope
       addDevice(0, lAlpaoMirror);
 
 
-      LoadMirrorModesFromFolderScheduler lMirrorModeScheduler =
-          new LoadMirrorModesFromFolderScheduler(lAlpaoMirror);
+      LoadMirrorModesFromFolderInstruction lMirrorModeScheduler =
+          new LoadMirrorModesFromFolderInstruction(lAlpaoMirror, this);
       addDevice(0, lMirrorModeScheduler);
 
-      RandomZernikesScheduler
+      RandomZernikesInstruction
               lRandomZernikesScheduler =
-              new RandomZernikesScheduler(lAlpaoMirror);
+              new RandomZernikesInstruction(lAlpaoMirror);
       addDevice(0, lRandomZernikesScheduler);
 
-      SequentialZernikesScheduler lSequentialZernikesScheduler =
-              new SequentialZernikesScheduler(lAlpaoMirror,0.1,0.0,5.0,-5.0);
+      SequentialZernikesInstruction lSequentialZernikesScheduler =
+              new SequentialZernikesInstruction(lAlpaoMirror,0.1,0.0,5.0,-5.0);
       addDevice(0, lSequentialZernikesScheduler);
 
-      addDevice(0, new LogMirrorZernikeFactorsToFileScheduler(lAlpaoMirror));
-      addDevice(0, new GradientBasedZernikeModeOptimizerScheduler(this, lAlpaoMirror, 3));
-      addDevice(0, new GradientBasedZernikeModeOptimizerScheduler(this, lAlpaoMirror, 4));
-      addDevice(0, new GradientBasedZernikeModeOptimizerScheduler(this, lAlpaoMirror, 5));
-      addDevice(0, new LogMirrorZernikeFactorsToFileScheduler(lAlpaoMirror));
+      addDevice(0, new LogMirrorZernikeFactorsToFileInstruction(lAlpaoMirror, this));
+      addDevice(0, new GradientBasedZernikeModeOptimizerInstruction(this, lAlpaoMirror, 3));
+      addDevice(0, new GradientBasedZernikeModeOptimizerInstruction(this, lAlpaoMirror, 4));
+      addDevice(0, new GradientBasedZernikeModeOptimizerInstruction(this, lAlpaoMirror, 5));
     }
 
     //Measure Image Quality Scheduler
-    addDevice(0, new MeasureDCTS2DOnStackScheduler<StackInterfaceContainer>(StackInterfaceContainer.class));
+    addDevice(0, new MeasureDCTS2DOnStackInstruction<>(StackInterfaceContainer.class, this));
 
     System.out.println("DEVICES ADDED");
   }
@@ -269,14 +271,14 @@ public class BScopeMicroscope extends SimulatedLightSheetMicroscope
       addDevice(0, lSpatialPhaseModulatorDeviceSimulator);
 
 
-      LoadMirrorModesFromFolderScheduler
+      LoadMirrorModesFromFolderInstruction
           lMirrorModeScheduler =
-          new LoadMirrorModesFromFolderScheduler(lSpatialPhaseModulatorDeviceSimulator);
+          new LoadMirrorModesFromFolderInstruction(lSpatialPhaseModulatorDeviceSimulator, this);
       addDevice(0, lMirrorModeScheduler);
 
-      RandomZernikesScheduler
+      RandomZernikesInstruction
               lRandomZernikesScheduler =
-              new RandomZernikesScheduler(lSpatialPhaseModulatorDeviceSimulator);
+              new RandomZernikesInstruction(lSpatialPhaseModulatorDeviceSimulator);
       addDevice(0, lRandomZernikesScheduler);
 
     }
