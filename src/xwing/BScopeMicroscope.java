@@ -13,7 +13,9 @@ import clearcontrol.devices.optomech.filterwheels.devices.sim.FilterWheelDeviceS
 import clearcontrol.devices.signalgen.devices.nirio.NIRIOSignalGenerator;
 import clearcontrol.microscope.lightsheet.component.detection.DetectionArm;
 import clearcontrol.microscope.lightsheet.component.lightsheet.LightSheet;
+import clearcontrol.microscope.lightsheet.component.lightsheet.schedulers.ChangeLightSheetWidthInstruction;
 import clearcontrol.microscope.lightsheet.component.opticalswitch.LightSheetOpticalSwitch;
+import clearcontrol.microscope.lightsheet.imaging.sequential.BeamAcquisitionInstruction;
 import clearcontrol.microscope.lightsheet.postprocessing.measurements.instructions.MeasureDCTS2DOnStackInstruction;
 import clearcontrol.microscope.lightsheet.signalgen.LightSheetSignalGeneratorDevice;
 import clearcontrol.microscope.lightsheet.simulation.LightSheetMicroscopeSimulationDevice;
@@ -27,6 +29,9 @@ import clearcontrol.microscope.lightsheet.spatialphasemodulation.optimizer.gradi
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.slms.devices.alpao.AlpaoDMDevice;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.slms.devices.sim.SpatialPhaseModulatorDeviceSimulator;
 import clearcontrol.microscope.lightsheet.warehouse.containers.StackInterfaceContainer;
+import org.ejml.data.DenseMatrix64F;
+
+import java.io.File;
 
 /**
  * BScope microscope
@@ -193,7 +198,10 @@ public class BScopeMicroscope extends SimulatedLightSheetMicroscope
 
         }
     }
-
+    // Setting up Laser Beam Acquisition module
+    {
+      addDevice(0, new BeamAcquisitionInstruction(this,0));
+    }
     // Setting up lightsheets selector
     {
       LightSheetOpticalSwitch lLightSheetOpticalSwitch =
