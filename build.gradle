@@ -71,7 +71,7 @@ def getVersionName = {
 sourceCompatibility = 1.8
 
 group = 'net.clearcontrol'
-version = "2.0.9"; //getVersionName()
+version = "2.0.10"; //getVersionName()
 
 test
 {
@@ -97,7 +97,7 @@ dependencies
   // ClearControl:
     compile ('net.clearvolume:cleargl:2.0.4')
     
-    compile ('net.clearcontrol:clearcontrol-lightsheet:1.27.2')      {transitive= true; changing= true}
+    compile ('net.clearcontrol:clearcontrol-lightsheet:1.27.3')      {transitive= true; changing= true}
 
 
     compile group: 'junit', name: 'junit', version: '4.11'
