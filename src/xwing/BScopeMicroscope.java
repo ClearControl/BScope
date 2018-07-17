@@ -9,6 +9,7 @@ import clearcontrol.devices.lasers.devices.omicron.OmicronLaserDevice;
 import clearcontrol.devices.lasers.instructions.LaserOnOffInstruction;
 import clearcontrol.devices.lasers.instructions.LaserPowerInstruction;
 import clearcontrol.devices.optomech.filterwheels.devices.fli.FLIFilterWheelDevice;
+import clearcontrol.devices.optomech.filterwheels.devices.fli.FLIFilterWheelDevice;
 import clearcontrol.devices.optomech.filterwheels.devices.sim.FilterWheelDeviceSimulator;
 import clearcontrol.devices.signalgen.devices.nirio.NIRIOSignalGenerator;
 import clearcontrol.microscope.lightsheet.component.detection.DetectionArm;
@@ -16,16 +17,16 @@ import clearcontrol.microscope.lightsheet.component.lightsheet.LightSheet;
 import clearcontrol.microscope.lightsheet.component.lightsheet.schedulers.ChangeLightSheetWidthInstruction;
 import clearcontrol.microscope.lightsheet.component.opticalswitch.LightSheetOpticalSwitch;
 import clearcontrol.microscope.lightsheet.imaging.sequential.BeamAcquisitionInstruction;
+import clearcontrol.microscope.lightsheet.imaging.singleview.WriteSingleLightSheetImageAsTifToDiscInstruction;
 import clearcontrol.microscope.lightsheet.postprocessing.measurements.instructions.MeasureDCTS2DOnStackInstruction;
 import clearcontrol.microscope.lightsheet.signalgen.LightSheetSignalGeneratorDevice;
 import clearcontrol.microscope.lightsheet.simulation.LightSheetMicroscopeSimulationDevice;
 import clearcontrol.microscope.lightsheet.simulation.SimulatedLightSheetMicroscope;
-import clearcontrol.microscope.lightsheet.spatialphasemodulation.instructions.LoadMirrorModesFromFolderInstruction;
-import clearcontrol.microscope.lightsheet.spatialphasemodulation.instructions.LogMirrorZernikeFactorsToFileInstruction;
-import clearcontrol.microscope.lightsheet.spatialphasemodulation.instructions.RandomZernikesInstruction;
-import clearcontrol.microscope.lightsheet.spatialphasemodulation.instructions.SequentialZernikesInstruction;
+import clearcontrol.microscope.lightsheet.spatialphasemodulation.instructions.*;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.instructions.gui.SequentialZernikesInstructionPanel;
+import clearcontrol.microscope.lightsheet.spatialphasemodulation.optimizer.defocusdiversity.DefocusDiversityInstruction;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.optimizer.gradientbased.GradientBasedZernikeModeOptimizerInstruction;
+import clearcontrol.microscope.lightsheet.spatialphasemodulation.optimizer.sensorlessAO.SensorLessAOForSinglePlaneInstruction;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.slms.devices.alpao.AlpaoDMDevice;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.slms.devices.sim.SpatialPhaseModulatorDeviceSimulator;
 import clearcontrol.microscope.lightsheet.warehouse.containers.StackInterfaceContainer;
@@ -141,7 +142,6 @@ public class BScopeMicroscope extends SimulatedLightSheetMicroscope
         addDevice(c, lCamera);
       }
     }
-
    
     // Adding signal Generator:
     LightSheetSignalGeneratorDevice lLSSignalGenerator;
@@ -210,7 +210,11 @@ public class BScopeMicroscope extends SimulatedLightSheetMicroscope
 
       addDevice(0, lLightSheetOpticalSwitch);
     }
+    // Setting up Tiff writer
+    {
+      addDevice(0, new WriteSingleLightSheetImageAsTifToDiscInstruction(0, 0, this));
 
+    }
 
     // setup filter wheel
     {
@@ -239,14 +243,28 @@ public class BScopeMicroscope extends SimulatedLightSheetMicroscope
               new RandomZernikesInstruction(lAlpaoMirror);
       addDevice(0, lRandomZernikesScheduler);
 
+      /*
+      SetZernikeModeInstruction
+              lSetZernikeModeInstruction =
+              new SetZernikeModeInstruction(lAlpaoMirror);
+      addDevice(0, lSetZernikeModeInstruction);
+*/
       SequentialZernikesInstruction lSequentialZernikesScheduler =
               new SequentialZernikesInstruction(lAlpaoMirror,0.1,0.0,5.0,-5.0);
       addDevice(0, lSequentialZernikesScheduler);
+
 
       addDevice(0, new LogMirrorZernikeFactorsToFileInstruction(lAlpaoMirror, this));
       addDevice(0, new GradientBasedZernikeModeOptimizerInstruction(this, lAlpaoMirror, 3));
       addDevice(0, new GradientBasedZernikeModeOptimizerInstruction(this, lAlpaoMirror, 4));
       addDevice(0, new GradientBasedZernikeModeOptimizerInstruction(this, lAlpaoMirror, 5));
+
+
+      DefocusDiversityInstruction lDefocusDiversityInstruction =
+              new DefocusDiversityInstruction(this, 2,0,0);
+      addDevice(0, lDefocusDiversityInstruction);
+      addDevice(0, new SensorLessAOForSinglePlaneInstruction(this, lAlpaoMirror));
+
     }
 
     //Measure Image Quality Scheduler
