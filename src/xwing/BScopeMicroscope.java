@@ -9,12 +9,10 @@ import clearcontrol.devices.lasers.devices.omicron.OmicronLaserDevice;
 import clearcontrol.devices.lasers.instructions.LaserOnOffInstruction;
 import clearcontrol.devices.lasers.instructions.LaserPowerInstruction;
 import clearcontrol.devices.optomech.filterwheels.devices.fli.FLIFilterWheelDevice;
-import clearcontrol.devices.optomech.filterwheels.devices.fli.FLIFilterWheelDevice;
 import clearcontrol.devices.optomech.filterwheels.devices.sim.FilterWheelDeviceSimulator;
 import clearcontrol.devices.signalgen.devices.nirio.NIRIOSignalGenerator;
 import clearcontrol.microscope.lightsheet.component.detection.DetectionArm;
 import clearcontrol.microscope.lightsheet.component.lightsheet.LightSheet;
-import clearcontrol.microscope.lightsheet.component.lightsheet.schedulers.ChangeLightSheetWidthInstruction;
 import clearcontrol.microscope.lightsheet.component.opticalswitch.LightSheetOpticalSwitch;
 import clearcontrol.microscope.lightsheet.imaging.sequential.BeamAcquisitionInstruction;
 import clearcontrol.microscope.lightsheet.imaging.singleview.WriteSingleLightSheetImageAsTifToDiscInstruction;
@@ -23,16 +21,13 @@ import clearcontrol.microscope.lightsheet.signalgen.LightSheetSignalGeneratorDev
 import clearcontrol.microscope.lightsheet.simulation.LightSheetMicroscopeSimulationDevice;
 import clearcontrol.microscope.lightsheet.simulation.SimulatedLightSheetMicroscope;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.instructions.*;
-import clearcontrol.microscope.lightsheet.spatialphasemodulation.instructions.gui.SequentialZernikesInstructionPanel;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.optimizer.defocusdiversity.DefocusDiversityInstruction;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.optimizer.gradientbased.GradientBasedZernikeModeOptimizerInstruction;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.optimizer.sensorlessAO.SensorLessAOForSinglePlaneInstruction;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.slms.devices.alpao.AlpaoDMDevice;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.slms.devices.sim.SpatialPhaseModulatorDeviceSimulator;
 import clearcontrol.microscope.lightsheet.warehouse.containers.StackInterfaceContainer;
-import org.ejml.data.DenseMatrix64F;
-
-import java.io.File;
+import xwing.deformablemirror.SendActuatorPositionsToMirrorInstruction;
 
 /**
  * BScope microscope
@@ -243,14 +238,18 @@ public class BScopeMicroscope extends SimulatedLightSheetMicroscope
               new RandomZernikesInstruction(lAlpaoMirror);
       addDevice(0, lRandomZernikesScheduler);
 
-      /*
-      SetZernikeModeInstruction
-              lSetZernikeModeInstruction =
-              new SetZernikeModeInstruction(lAlpaoMirror);
-      addDevice(0, lSetZernikeModeInstruction);
-*/
+
+//      SetZernikeModeInstruction
+//              lSetZernikeModeInstruction =
+//              new SetZernikeModeInstruction(lAlpaoMirror);
+//      addDevice(0, lSetZernikeModeInstruction);
+
+      SendActuatorPositionsToMirrorInstruction lSendActuatorPos =
+              new SendActuatorPositionsToMirrorInstruction(lAlpaoMirror);
+      addDevice(0,lSendActuatorPos);
+
       SequentialZernikesInstruction lSequentialZernikesScheduler =
-              new SequentialZernikesInstruction(lAlpaoMirror,0.1,0.0,5.0,-5.0);
+              new SequentialZernikesInstruction(lAlpaoMirror);
       addDevice(0, lSequentialZernikesScheduler);
 
 
