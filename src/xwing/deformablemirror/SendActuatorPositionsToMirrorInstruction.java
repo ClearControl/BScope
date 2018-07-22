@@ -25,9 +25,9 @@ public class SendActuatorPositionsToMirrorInstruction extends InstructionBase im
         mAlpaoMirror.setActuatorPositions(positions);
     }
     public boolean initialize() {
-        for(int i = 0; i < mActuatorArray.length; i++) {
-            mActuatorArray[i].set(0.0);
-        }
+//        for(int i = 0; i < mActuatorArray.length; i++) {
+//            mActuatorArray[i].set(0.0);
+//        }
         return true;
     }
     @Override
