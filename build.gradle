@@ -99,7 +99,7 @@ dependencies
     
     compile ('net.clearcontrol:clearcontrol-lightsheet:1.27.3')      {transitive= true; changing= true}
 
-
+    compile ('net.clearcontrol:clearclij:0.3.3')
     compile group: 'junit', name: 'junit', version: '4.11'
 	testCompile group: 'junit', name: 'junit', version: '4.11'
 }
