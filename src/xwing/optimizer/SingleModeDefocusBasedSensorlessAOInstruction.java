@@ -1,8 +1,6 @@
 package xwing.optimizer;
 
-import clearcl.ClearCLImage;
 import clearcl.imagej.ClearCLIJ;
-import clearcl.imagej.kernels.Kernels;
 import clearcontrol.core.log.LoggingFeature;
 import clearcontrol.core.variable.bounded.BoundedVariable;
 import clearcontrol.devices.imagej.ImageJFeature;
@@ -10,18 +8,15 @@ import clearcontrol.microscope.lightsheet.LightSheetMicroscope;
 import clearcontrol.microscope.lightsheet.imaging.SingleViewPlaneImager;
 import clearcontrol.microscope.lightsheet.imaging.singleview.WriteSingleLightSheetImageAsTifToDiscInstruction;
 import clearcontrol.microscope.lightsheet.instructions.LightSheetMicroscopeInstructionBase;
-import clearcontrol.microscope.lightsheet.spatialphasemodulation.instructions.SequentialZernikesInstruction;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.slms.SpatialPhaseModulatorDeviceInterface;
-import clearcontrol.microscope.lightsheet.spatialphasemodulation.slms.ZernikeModeFactorBasedSpatialPhaseModulatorBase;
 import clearcontrol.microscope.lightsheet.state.InterpolatedAcquisitionState;
 import clearcontrol.microscope.state.AcquisitionStateManager;
 import clearcontrol.stack.OffHeapPlanarStack;
 import clearcontrol.stack.StackInterface;
 
 import java.lang.reflect.Array;
-import java.util.Arrays;
 
-public class SingleModeDeocusBasedSensorlessAOInstruction extends LightSheetMicroscopeInstructionBase implements ImageJFeature, LoggingFeature {
+public class SingleModeDefocusBasedSensorlessAOInstruction extends LightSheetMicroscopeInstructionBase implements ImageJFeature, LoggingFeature {
 
 
     private final SpatialPhaseModulatorDeviceInterface mSpatialPhaseModulatorDeviceInterface;
@@ -30,7 +25,7 @@ public class SingleModeDeocusBasedSensorlessAOInstruction extends LightSheetMicr
             50.0,0.0,100.0);
     private BoundedVariable<Double> mStepSize = new BoundedVariable<Double>("Step size for Gradient Descent",
             0.25, 0.0, 2.0, 0.0000000001);
-    private BoundedVariable<Integer> mZernikeFactor = new BoundedVariable<Integer>("Zernike Factor",
+    private BoundedVariable<Integer> mZernikeFactor = new BoundedVariable<Integer>("Zernike Factor to optimize",
             3,0,66);
 
 
@@ -47,8 +42,8 @@ public class SingleModeDeocusBasedSensorlessAOInstruction extends LightSheetMicr
     WriteSingleLightSheetImageAsTifToDiscInstruction lWrite =  new WriteSingleLightSheetImageAsTifToDiscInstruction(
             0, 0, getLightSheetMicroscope());
 
-    public SingleModeDeocusBasedSensorlessAOInstruction(LightSheetMicroscope pLightSheetMicroscope,
-                                                 SpatialPhaseModulatorDeviceInterface pSpatialPhaseModulatorDeviceInterface)
+    public SingleModeDefocusBasedSensorlessAOInstruction(LightSheetMicroscope pLightSheetMicroscope,
+                                                         SpatialPhaseModulatorDeviceInterface pSpatialPhaseModulatorDeviceInterface)
     {
         super("Adaptive optics: Sensorless Single PLane AO optimizer for " +
                 pSpatialPhaseModulatorDeviceInterface.getName(), pLightSheetMicroscope);
@@ -226,10 +221,12 @@ public class SingleModeDeocusBasedSensorlessAOInstruction extends LightSheetMicr
         return mStepSize;
     }
     public BoundedVariable<Double> getPositionZ(){ return mPositionZ; }
+    public BoundedVariable<Double> getDefocusStepSize(){ return mDefocusStepSize; }
+    public BoundedVariable<Integer> getZernikeFator(){ return mZernikeFactor; }
 
     @Override
-    public xwing.optimizer.SingleModeDeocusBasedSensorlessAOInstruction copy() {
-        return new xwing.optimizer.SingleModeDeocusBasedSensorlessAOInstruction(getLightSheetMicroscope(), mSpatialPhaseModulatorDeviceInterface);
+    public SingleModeDefocusBasedSensorlessAOInstruction copy() {
+        return new SingleModeDefocusBasedSensorlessAOInstruction(getLightSheetMicroscope(), mSpatialPhaseModulatorDeviceInterface);
     }
 
 }
