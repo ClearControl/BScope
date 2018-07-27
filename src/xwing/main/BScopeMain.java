@@ -60,54 +60,68 @@ public class BScopeMain extends Application implements LoggingFeature
     pPrimaryStage.setY(0);
     pPrimaryStage.setTitle("BScope");
 
-    ButtonType lButtonReal = new ButtonType("Real");
-    ButtonType lButtonSimulation = new ButtonType("Simulation");
-    ButtonType lButtonCancel = new ButtonType("Cancel");
-
-    sAlert = new Alert(AlertType.CONFIRMATION);
-
-    sAlert.setTitle("Dialog");
-    sAlert.setHeaderText("Simulation or Real ?");
-    sAlert.setContentText("Choose whether you want to start in real or simulation mode");
-
-    sAlert.getButtonTypes().setAll(lButtonReal,
-                                   lButtonSimulation,
-                                   lButtonCancel);
-
-
     pPrimaryStage.show();
-
     Platform.runLater(() -> {
-      sResult = sAlert.showAndWait();
       Runnable lRunnable = () -> {
-        if (sResult.get() == lButtonSimulation)
-        {
-          startBScope(1,
-                     1,
-                     true,
-                     pPrimaryStage,
-                     l2DDisplay,
-                     l3DDisplay);
-        }
-        else if (sResult.get() == lButtonReal)
-        {
-          startBScope(1,
-                     1,
-                     false,
-                     pPrimaryStage,
-                     l2DDisplay,
-                     l3DDisplay);
-        }
-        else if (sResult.get() == lButtonCancel)
-        {
-          Platform.runLater(() -> pPrimaryStage.hide());
-        }
+        startBScope(1,
+                1,
+                false,
+                pPrimaryStage,
+                l2DDisplay,
+                l3DDisplay);
       };
-
       Thread lThread = new Thread(lRunnable, "StartXWing");
       lThread.setDaemon(true);
       lThread.start();
-    });
+      });
+//    ButtonType lButtonReal = new ButtonType("Real");
+//    ButtonType lButtonSimulation = new ButtonType("Simulation");
+//    ButtonType lButtonCancel = new ButtonType("Cancel");
+//
+//    sAlert = new Alert(AlertType.CONFIRMATION);
+//
+//    sAlert.setTitle("Dialog");
+//    sAlert.setHeaderText("Simulation or Real ?");
+//    sAlert.setContentText("Choose whether you want to start in real or simulation mode");
+//
+//    sAlert.getButtonTypes().setAll(lButtonReal,
+//                                   lButtonSimulation,
+//                                   lButtonCancel);
+
+
+//    pPrimaryStage.show();
+
+//    Platform.runLater(() -> {
+//      sResult = sAlert.showAndWait();
+//      Runnable lRunnable = () -> {
+//        if (sResult.get() == lButtonSimulation)
+//        {
+//          startBScope(1,
+//                     1,
+//                     true,
+//                     pPrimaryStage,
+//                     l2DDisplay,
+//                     l3DDisplay);
+//        }
+//        else if (sResult.get() == lButtonReal)
+//        {
+//          startBScope(1,
+//                     1,
+//                     false,
+//                     pPrimaryStage,
+//                     l2DDisplay,
+//                     l3DDisplay);
+//        }
+//        else if (sResult.get() == lButtonCancel)
+//        {
+//          Platform.runLater(() -> pPrimaryStage.hide());
+//        }
+//      };
+
+//      Thread lThread = new Thread(lRunnable, "StartXWing");
+//      lThread.setDaemon(true);
+//      lThread.start();
+//    });
 
   }
 
