@@ -10,23 +10,26 @@ import clearcontrol.microscope.lightsheet.imaging.singleview.WriteSingleLightShe
 import clearcontrol.microscope.lightsheet.instructions.LightSheetMicroscopeInstructionBase;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.slms.SpatialPhaseModulatorDeviceInterface;
 import clearcontrol.microscope.lightsheet.state.InterpolatedAcquisitionState;
+import clearcontrol.microscope.lightsheet.warehouse.containers.StackInterfaceContainer;
+import clearcontrol.microscope.lightsheet.warehouse.instructions.DropAllContainersOfTypeInstruction;
 import clearcontrol.microscope.state.AcquisitionStateManager;
 import clearcontrol.stack.OffHeapPlanarStack;
 import clearcontrol.stack.StackInterface;
 
 import java.lang.reflect.Array;
+import java.util.Arrays;
 
-public class SingleModeDefocusBasedSensorlessAOInstruction extends LightSheetMicroscopeInstructionBase implements ImageJFeature, LoggingFeature {
+public class SingleModeDefocusBasedSensorlessAOInstruction extends LightSheetMicroscopeInstructionBase implements ImageJFeature,LoggingFeature {
 
 
     private final SpatialPhaseModulatorDeviceInterface mSpatialPhaseModulatorDeviceInterface;
 
     private BoundedVariable<Double> mPositionZ = new BoundedVariable<Double>("position Z",
             50.0,0.0,100.0);
-    private BoundedVariable<Double> mStepSize = new BoundedVariable<Double>("Step size for Gradient Descent",
+    private BoundedVariable<Double> mStepSize = new BoundedVariable<Double>("Step size",
             0.25, 0.0, 2.0, 0.0000000001);
-    private BoundedVariable<Integer> mZernikeFactor = new BoundedVariable<Integer>("Zernike Factor to optimize",
-            3,0,66);
+    private BoundedVariable<Integer> mZernikeFactor = new BoundedVariable<Integer>("Zernike Factor ",
+            4,0,66);
 
 
     private BoundedVariable<Double> mDefocusStepSize = new BoundedVariable<Double>("Defocus Step Size",
@@ -34,6 +37,7 @@ public class SingleModeDefocusBasedSensorlessAOInstruction extends LightSheetMic
 
 
     private ClearCLIJ clij = ClearCLIJ.getInstance();
+
 
     private double[] mZernikes;
     private int mTileHeight = 0;
@@ -45,7 +49,7 @@ public class SingleModeDefocusBasedSensorlessAOInstruction extends LightSheetMic
     public SingleModeDefocusBasedSensorlessAOInstruction(LightSheetMicroscope pLightSheetMicroscope,
                                                          SpatialPhaseModulatorDeviceInterface pSpatialPhaseModulatorDeviceInterface)
     {
-        super("Adaptive optics: Sensorless Single PLane AO optimizer for " +
+        super("Adaptive optics: Sensorless Defocus Based Single PLane AO optimizer for " +
                 pSpatialPhaseModulatorDeviceInterface.getName(), pLightSheetMicroscope);
         this.mSpatialPhaseModulatorDeviceInterface = pSpatialPhaseModulatorDeviceInterface;
         mStepSize.set(0.25);
@@ -108,8 +112,16 @@ public class SingleModeDefocusBasedSensorlessAOInstruction extends LightSheetMic
         Thread.sleep(mSpatialPhaseModulatorDeviceInterface.getRelaxationTimeInMilliseconds());
         double lFactorIncreasedQuality = determineQuality(zernikesFactorIncreased);
 
+        double decreasedValue = zernikesFactorDecreased[mZernikeFactor.get()];
+        double defaultValue = 0.0;
+        double increasedValue = zernikesFactorIncreased[mZernikeFactor.get()];
+        double[] result = CalcParabolaVertex(decreasedValue,lFactorDecreasedQuality,defaultValue,
+                lDefaultQuality,increasedValue,lFactorIncreasedQuality);
 
-
+        if(result[0]>5 || result[0]<-5){
+            info("Optimizer trying to set extreme amount of optimization" + result[0]);
+            result[0]=0.0;
+        }
 
         System.out.println(" Negative coeff Quality: " + lFactorDecreasedQuality);
         System.out.println(" Zero Coeff Quality: " + lDefaultQuality);
@@ -117,7 +129,7 @@ public class SingleModeDefocusBasedSensorlessAOInstruction extends LightSheetMic
 
 
         // Setting the zernike factor back to 0
-        mZernikes[mZernikeFactor.get()] = 0;
+        mZernikes[mZernikeFactor.get()] = result[0];
         mSpatialPhaseModulatorDeviceInterface.setZernikeFactors(mZernikes);
 
         return true;
@@ -132,6 +144,7 @@ public class SingleModeDefocusBasedSensorlessAOInstruction extends LightSheetMic
         mSpatialPhaseModulatorDeviceInterface.setZernikeFactors(lzernikesFactorPoitiveDefocus);
         Thread.sleep(mSpatialPhaseModulatorDeviceInterface.getRelaxationTimeInMilliseconds());
         StackInterface lPositiveDefocusStack = image();
+        //clij.show(lPositiveDefocusStack, "Positive Defocus Stack for Zernike Factor Coeff" + pZernikes[mZernikeFactor.get()]);
 
         // Take negative defocus image
         double[] lzernikesFactorNegativeDefocus = new double[pZernikes.length];
@@ -140,9 +153,11 @@ public class SingleModeDefocusBasedSensorlessAOInstruction extends LightSheetMic
         mSpatialPhaseModulatorDeviceInterface.setZernikeFactors(lzernikesFactorNegativeDefocus);
         Thread.sleep(mSpatialPhaseModulatorDeviceInterface.getRelaxationTimeInMilliseconds());
         StackInterface lNegativeDefocusStack = image();
+        //clij.show(lNegativeDefocusStack, "Negative Defocus Stack for Zernike Factor Coeff" + pZernikes[mZernikeFactor.get()]);
 
         double error = MSE((OffHeapPlanarStack) lPositiveDefocusStack, (OffHeapPlanarStack) lNegativeDefocusStack);
-
+        lPositiveDefocusStack.release();
+        lNegativeDefocusStack.release();
 
         // Setting the zernike factor back to 0
         mZernikes[lDefocusZernikeFactor] = 0;
@@ -154,6 +169,7 @@ public class SingleModeDefocusBasedSensorlessAOInstruction extends LightSheetMic
     private StackInterface image() {
         InterpolatedAcquisitionState currentState = (InterpolatedAcquisitionState) getLightSheetMicroscope().
                 getDevice(AcquisitionStateManager.class, 0).getCurrentState();
+
         SingleViewPlaneImager lImager = new SingleViewPlaneImager(getLightSheetMicroscope(), mPositionZ.get());
         lImager.setImageWidth(currentState.getImageWidthVariable().get().intValue());
         lImager.setImageHeight(currentState.getImageHeightVariable().get().intValue());
@@ -216,7 +232,10 @@ public class SingleModeDefocusBasedSensorlessAOInstruction extends LightSheetMic
 
         return result;
     }
-
+//    public static void main(String ...args){
+//        System.out.println(Arrays.toString(CalcParabolaVertex(-0.25, 259.3306121826172, 0.0, 229.75665283203125, 0.25, 252.44032287597656)));
+//
+//    }
     public BoundedVariable<Double> getstepSize(){
         return mStepSize;
     }

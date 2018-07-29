@@ -28,6 +28,8 @@ import clearcontrol.microscope.lightsheet.spatialphasemodulation.slms.devices.al
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.slms.devices.sim.SpatialPhaseModulatorDeviceSimulator;
 import clearcontrol.microscope.lightsheet.warehouse.containers.StackInterfaceContainer;
 import xwing.deformablemirror.SendActuatorPositionsToMirrorInstruction;
+import xwing.deformablemirror.SendZernikeModesToMirrorInstruction;
+import xwing.optimizer.SingleModeDefocusBasedSensorlessAOInstruction;
 
 /**
  * BScope microscope
@@ -247,6 +249,7 @@ public class BScopeMicroscope extends SimulatedLightSheetMicroscope
       SendActuatorPositionsToMirrorInstruction lSendActuatorPos =
               new SendActuatorPositionsToMirrorInstruction(lAlpaoMirror);
       addDevice(0,lSendActuatorPos);
+      addDevice(0,new SendZernikeModesToMirrorInstruction(lAlpaoMirror));
 
       SequentialZernikesInstruction lSequentialZernikesScheduler =
               new SequentialZernikesInstruction(lAlpaoMirror);
@@ -263,7 +266,8 @@ public class BScopeMicroscope extends SimulatedLightSheetMicroscope
               new DefocusDiversityInstruction(this, 2,0,0);
       addDevice(0, lDefocusDiversityInstruction);
       addDevice(0, new SensorLessAOForSinglePlaneInstruction(this, lAlpaoMirror));
-
+      addDevice(0,new
+              SingleModeDefocusBasedSensorlessAOInstruction(this,lAlpaoMirror));
     }
 
     //Measure Image Quality Scheduler
