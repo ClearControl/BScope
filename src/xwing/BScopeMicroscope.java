@@ -5,6 +5,7 @@ import clearcontrol.devices.cameras.StackCameraDeviceInterface;
 import clearcontrol.devices.cameras.devices.hamamatsu.HamStackCamera;
 import clearcontrol.devices.filterwheel.instructions.FilterWheelInstruction;
 import clearcontrol.devices.lasers.LaserDeviceInterface;
+import clearcontrol.devices.lasers.devices.cobolt.CoboltLaserDevice;
 import clearcontrol.devices.lasers.devices.omicron.OmicronLaserDevice;
 import clearcontrol.devices.lasers.instructions.LaserOnOffInstruction;
 import clearcontrol.devices.lasers.instructions.LaserPowerInstruction;
@@ -22,6 +23,7 @@ import clearcontrol.microscope.lightsheet.simulation.LightSheetMicroscopeSimulat
 import clearcontrol.microscope.lightsheet.simulation.SimulatedLightSheetMicroscope;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.instructions.*;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.optimizer.defocusdiversity.DefocusDiversityInstruction;
+import clearcontrol.microscope.lightsheet.spatialphasemodulation.optimizer.geneticalgorithm.instructions.GeneticAlgorithmMirrorModeOptimizeInstruction;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.optimizer.gradientbased.GradientBasedZernikeModeOptimizerInstruction;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.optimizer.sensorlessAO.SensorLessAOForSinglePlaneInstruction;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.slms.devices.alpao.AlpaoDMDevice;
@@ -261,6 +263,8 @@ public class BScopeMicroscope extends SimulatedLightSheetMicroscope
       addDevice(0, new GradientBasedZernikeModeOptimizerInstruction(this, lAlpaoMirror, 4));
       addDevice(0, new GradientBasedZernikeModeOptimizerInstruction(this, lAlpaoMirror, 5));
 
+      //addDevice( 0, new GeneticAlgorithmMlaseirrorModeOptimizeInstruction(lAlpaoMirror, this));
+
 
       DefocusDiversityInstruction lDefocusDiversityInstruction =
               new DefocusDiversityInstruction(this, 2,0,0);
@@ -268,6 +272,9 @@ public class BScopeMicroscope extends SimulatedLightSheetMicroscope
       addDevice(0, new SensorLessAOForSinglePlaneInstruction(this, lAlpaoMirror));
       addDevice(0,new
               SingleModeDefocusBasedSensorlessAOInstruction(this,lAlpaoMirror));
+
+        addDevice(0,new
+                RandomSingleZernikeModesInstruction(lAlpaoMirror));
     }
 
     //Measure Image Quality Scheduler
