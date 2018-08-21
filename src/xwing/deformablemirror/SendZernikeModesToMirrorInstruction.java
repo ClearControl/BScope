@@ -17,8 +17,6 @@ public class SendZernikeModesToMirrorInstruction extends InstructionBase impleme
         mAlpaoMirror = pAlpaoMirror;
         for(int i = 0; i < mZernikeFactorsArray.length; i++) {
             mZernikeFactorsArray[i] = new BoundedVariable<Double>("Zernike Mode " +i,0.0,-10.0,10.0);
-//            mActuatorArray[i].setMinMax(-1,1);
-//            mActuatorArray[i].set(0.0);
         }
     }
     public void sendZernikeMode(double pZernikes[]){
