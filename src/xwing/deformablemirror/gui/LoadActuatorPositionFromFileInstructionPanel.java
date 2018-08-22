@@ -6,12 +6,13 @@ import clearcontrol.gui.jfx.var.file.VariableFileChooser;
 import clearcontrol.microscope.lightsheet.spatialphasemodulation.instructions.LoadMirrorModesFromFolderInstruction;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import xwing.deformablemirror.LoadActuatorPositionFromFileInstruction;
 
 public class LoadActuatorPositionFromFileInstructionPanel extends
         CustomGridPane
         implements LoggingFeature
 {
-    public LoadActuatorPositionFromFileInstructionPanel(LoadMirrorModesFromFolderInstruction pLoadMirrorModesFromFolderScheduler) {
+    public LoadActuatorPositionFromFileInstructionPanel(LoadActuatorPositionFromFileInstruction pLoadActuatorPositionFromFileInstruction) {
 
 
         int lRow = 0;
@@ -24,7 +25,7 @@ public class LoadActuatorPositionFromFileInstructionPanel extends
         {
             VariableFileChooser lRootFolderChooser =
                     new VariableFileChooser("Folder:",
-                            pLoadMirrorModesFromFolderScheduler.getRootFolderVariable(),
+                            pLoadActuatorPositionFromFileInstruction.getRootFolderVariable(),
                             true);
             GridPane.setColumnSpan(lRootFolderChooser.getLabel(),
                     Integer.valueOf(1));
